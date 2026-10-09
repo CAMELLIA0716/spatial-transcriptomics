@@ -27,5 +27,9 @@ target/
 uploads/
 dashboards/
 
+# SSH deploy keys
+deploy_key
+deploy_key.pub
+
 # Logs
 *.log
