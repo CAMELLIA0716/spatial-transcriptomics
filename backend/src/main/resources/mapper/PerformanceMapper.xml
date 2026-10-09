@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.PerformanceMapper">
+    <resultMap id="BaseResultMap" type="Performance">
+        <id column="id" property="id"/>
+        <result column="sample_id" property="sampleId"/>
+        <result column="method_name" property="methodName"/>
+        <result column="nmi" property="nmi"/>
+        <result column="hom" property="hom"/>
+        <result column="com" property="com"/>
+        <result column="chaos" property="chaos"/>
+        <result column="pas" property="pas"/>
+        <result column="asw" property="asw"/>
+        <result column="moran" property="moran"/>
+        <result column="geary" property="geary"/>
+        <result column="accuracy_score" property="accuracyScore"/>
+    </resultMap>
+
+    <select id="findByDataId" resultMap="BaseResultMap">
+        SELECT * FROM performance WHERE sample_id = #{dataId} ORDER BY method_name
+    </select>
+
+    <select id="findByDataIdWithPagination" resultMap="BaseResultMap">
+        SELECT * FROM performance
+        WHERE sample_id = #{dataId}
+        ORDER BY method_name
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByDataId" resultType="long">
+        SELECT COUNT(*) FROM performance WHERE sample_id = #{dataId}
+    </select>
+
+    <select id="getAccuracyByDataId" resultMap="BaseResultMap">
+        SELECT * FROM performance WHERE sample_id = #{dataId} ORDER BY accuracy_score DESC
+    </select>
+</mapper>

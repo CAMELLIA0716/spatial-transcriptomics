@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.SampleMapper">
+    <resultMap id="BaseResultMap" type="Sample">
+        <id column="sample_id" property="sampleId"/>
+        <result column="technology" property="technology"/>
+        <result column="size" property="size"/>
+        <result column="spots" property="spots"/>
+        <result column="genes" property="genes"/>
+        <result column="sparsity" property="sparsity"/>
+        <result column="annotation" property="annotation"/>
+        <result column="type" property="type"/>
+        <result column="dashboard_path" property="dashboardPath"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT * FROM sample ORDER BY sample_id
+    </select>
+
+    <select id="findByType" resultMap="BaseResultMap">
+        SELECT * FROM sample WHERE type = #{type} ORDER BY sample_id
+    </select>
+
+    <select id="findBySampleId" resultMap="BaseResultMap">
+        SELECT * FROM sample WHERE sample_id = #{sampleId}
+    </select>
+
+    <select id="searchByType" resultMap="BaseResultMap">
+        SELECT * FROM sample
+        WHERE type = #{type} AND sample_id LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY sample_id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByType" resultType="long">
+        SELECT COUNT(*) FROM sample WHERE type = #{type}
+    </select>
+
+    <select id="countSearchByType" resultType="long">
+        SELECT COUNT(*) FROM sample
+        WHERE type = #{type} AND sample_id LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO sample (sample_id, technology, size, spots, genes, sparsity, annotation, type, dashboard_path, created_at)
+        VALUES (#{sampleId}, #{technology}, #{size}, #{spots}, #{genes}, #{sparsity}, #{annotation}, #{type}, #{dashboardPath}, NOW())
+    </insert>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM sample
+    </select>
+</mapper>

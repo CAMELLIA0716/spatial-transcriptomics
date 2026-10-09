@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.SpotMethodLabelMapper">
+    <resultMap id="BaseResultMap" type="SpotMethodLabel">
+        <id column="id" property="id"/>
+        <result column="spot_id" property="spotId"/>
+        <result column="method_id" property="methodId"/>
+        <result column="label" property="label"/>
+    </resultMap>
+
+    <select id="findBySpotId" resultMap="BaseResultMap">
+        SELECT * FROM spot_method_label WHERE spot_id = #{spotId}
+    </select>
+
+    <select id="findLabelsByDataset" resultType="map">
+        SELECT
+            s.spot_name,
+            s.x_coord,
+            s.y_coord,
+            s.consistency_score,
+            s.complexity_level,
+            s.ground_truth,
+            MAX(CASE WHEN m.name = 'CCST' THEN sml.label END) as CCST,
+            MAX(CASE WHEN m.name = 'conST' THEN sml.label END) as conST,
+            MAX(CASE WHEN m.name = 'DeepST' THEN sml.label END) as DeepST,
+            MAX(CASE WHEN m.name = 'GraphST' THEN sml.label END) as GraphST,
+            MAX(CASE WHEN m.name = 'spaceflow' THEN sml.label END) as spaceflow,
+            MAX(CASE WHEN m.name = 'SpaGCN' THEN sml.label END) as SpaGCN,
+            MAX(CASE WHEN m.name = 'STAGATE' THEN sml.label END) as STAGATE,
+            MAX(CASE WHEN m.name = 'STAIG' THEN sml.label END) as STAIG
+        FROM spot s
+                 LEFT JOIN spot_method_label sml ON s.id = sml.spot_id
+                 LEFT JOIN method m ON sml.method_id = m.id
+        WHERE s.dataset_id = #{datasetId}
+        GROUP BY s.id
+        ORDER BY s.id
+    </select>
+</mapper>

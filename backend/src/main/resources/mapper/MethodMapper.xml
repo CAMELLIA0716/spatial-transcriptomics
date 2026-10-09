@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.MethodMapper">
+    <resultMap id="BaseResultMap" type="Method">
+        <id column="id" property="id"/>
+        <result column="sample_id" property="sampleId"/>
+        <result column="method_name" property="methodName"/>
+        <result column="weight" property="weight"/>
+        <result column="file_path_original" property="filePathOriginal"/>
+        <result column="file_path_complex" property="filePathComplex"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="findBySampleId" resultMap="BaseResultMap">
+        SELECT * FROM method WHERE sample_id = #{sampleId} ORDER BY method_name
+    </select>
+
+    <select id="findBySampleIdAndMethodName" resultMap="BaseResultMap">
+        SELECT * FROM method WHERE sample_id = #{sampleId} AND method_name = #{methodName}
+    </select>
+
+    <select id="countBySampleId" resultType="long">
+        SELECT COUNT(*) FROM method WHERE sample_id = #{sampleId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO method (sample_id, method_name, weight, file_path_original, file_path_complex, created_at)
+        VALUES (#{sampleId}, #{methodName}, #{weight}, #{filePathOriginal}, #{filePathComplex}, NOW())
+    </insert>
+</mapper>
